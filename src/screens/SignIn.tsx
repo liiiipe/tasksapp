@@ -7,6 +7,7 @@ import Logo from "../assets/logo_primary.svg";
 import { Button } from '../components/Button';
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [passwors, setPassword] = useState("");
 
@@ -27,7 +28,7 @@ export function SignIn() {
         placeholder="E-mail"
         mb={4}
         InputLeftElement={<Icon as={<Envelope color={colors.gray[300]} />} ml={4} />}
-        // enablesReturnKeyAutomatically
+        enablesReturnKeyAutomatically
         onChangeText={setEmail}
       />
       <Input
@@ -42,6 +43,7 @@ export function SignIn() {
         title="Entrar"
         w="full"
         onPress={handleSignIn}
+        isLoading={isLoading}
       />
     </VStack>
   )
