@@ -3,10 +3,10 @@ import { Circle, Popover, Pressable, Text } from "native-base";
 type PopoverLengthTasksProps = {
   lengthListTasksSelected: number;
   isTasksFinishedSelected: boolean;
-  switchColorTextTitle: string;
+  colorText: string;
 }
 
-export function PopoverLengthTasks({ lengthListTasksSelected, isTasksFinishedSelected, switchColorTextTitle }: PopoverLengthTasksProps) {
+export function PopoverLengthTasks({ lengthListTasksSelected, isTasksFinishedSelected, colorText }: PopoverLengthTasksProps) {
   let singularOrPluralSentence = lengthListTasksSelected === 1 ? `tarefa ${isTasksFinishedSelected ? "finalizada" : "em andamento"}` : `tarefas ${isTasksFinishedSelected ? "finalizadas" : "em andamento"}`;
 
   return (
@@ -20,9 +20,9 @@ export function PopoverLengthTasks({ lengthListTasksSelected, isTasksFinishedSel
             h={8}
             w={8}
             borderWidth={1}
-            borderColor={isTasksFinishedSelected ? "green.300" : "secondary.700"}
+            borderColor={colorText}
           >
-            <Text color={switchColorTextTitle} >
+            <Text color={colorText} >
               {lengthListTasksSelected}
             </Text>
           </Circle>

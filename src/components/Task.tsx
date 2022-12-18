@@ -1,28 +1,28 @@
-import { Box, Circle, HStack, Text, useTheme, VStack, Pressable, IPressableProps } from 'native-base';
+import { Box, Circle, HStack, Text, useTheme, VStack, Pressable, IPressableProps, useColorModeValue } from 'native-base';
 import { ClockAfternoon, Hourglass, CircleWavyCheck } from 'phosphor-react-native';
 
-export type OrderProps = {
+export type TaskProps = {
   id: string;
-  patrimony: string;
+  title: string;
   when: string;
-  status: 'open' | 'closed';
+  finished: boolean;
 }
 
 type Props = IPressableProps & {
-  data: OrderProps;
+  data: TaskProps;
 }
 
-export function Order({ data, ...rest }: Props) {
+export function Task({ data, ...rest }: Props) {
   const { colors } = useTheme();
 
-  const statusColor = data.status === 'open' ? colors.secondary[700] : colors.green[300];
+  const statusColor = data.finished ? colors.green[300] : colors.secondary[700];
 
   return (
     <Pressable
       borderWidth={1}
-      borderColor="gray.700"
+      borderColor={useColorModeValue("gray.700", "gray.200")}
       rounded="md"
-      _pressed={{ borderColor: statusColor }}
+      _pressed={{ borderColor: useColorModeValue(statusColor, "white") }}
       mb={4}
       {...rest}
     >
@@ -37,7 +37,7 @@ export function Order({ data, ...rest }: Props) {
 
         <VStack flex={1} my={5} ml={5}>
           <Text color="white" fontSize="md">
-            Patrimônio {data.patrimony}
+           {data.title}
           </Text>
           <HStack alignItems="center">
             <ClockAfternoon size={15} color={colors.gray[300]} />
@@ -49,7 +49,7 @@ export function Order({ data, ...rest }: Props) {
 
         <Circle bg="gray.500" h={12} w={12} mr={5}>
           {
-            data.status === 'closed'
+            data.finished
               ? <CircleWavyCheck size={24} color={statusColor} />
               : <Hourglass size={24} color={statusColor} />
           }

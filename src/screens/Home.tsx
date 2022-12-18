@@ -1,26 +1,39 @@
 import { useState } from 'react';
 
-import { Center, FlatList, Heading, HStack, IconButton, Text, useTheme, VStack } from "native-base";
+import { Center, Circle, FlatList, Heading, HStack, IconButton, Popover, Text, useColorMode, useColorModeValue, useTheme, VStack } from "native-base";
 import { useNavigation } from '@react-navigation/native';
-import { ChatTeardropText, Plus, SignOut } from "phosphor-react-native";
+import { ChatTeardropText, Moon, Plus, SunDim } from "phosphor-react-native";
 
 import { Filter } from "../components/Filter";
-import { Order, OrderProps } from '../components/Order';
+import { Task, TaskProps } from '../components/Task';
 import Logo from "../assets/logo_secondary.svg";
+import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
 
 export function Home() {
-  const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>('open');
-  const [orders, setOrders] = useState<OrderProps[]>([
+  const navigation = useNavigation();
+  const { colors } = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const switchColorTextHeader = useColorModeValue("gray.100", "gray.600");
+
+  const [isTasksFinishedSelected, setIsTasksFinishedSelected] = useState(false);
+
+  const [tasks, setTasks] = useState<TaskProps[]>([
     {
       id: '456',
-      patrimony: '123456',
+      title: 'Task 123456766767',
       when: '18/07/2022 às 14:00',
-      status: 'open'
+      finished: false
+    },
+    {
+      id: '454356',
+      title: 'Task finalizada',
+      when: '18/07/2022 às 14:00',
+      finished: true
     }
   ]);
 
-  const navigation = useNavigation();
-  const { colors } = useTheme();
+  let tasksFinisheds = tasks.filter(task => task.finished);
+  let tasksInProgress = tasks.filter(task => !task.finished);
 
   function handleNewOrder() {
     navigation.navigate('new');
@@ -31,49 +44,57 @@ export function Home() {
   }
 
   return (
-    <VStack flex={1} pb={6} bg="gray.700" position="relative">
+    <VStack flex={1} pb={6} bg={useColorModeValue("gray.700", "gray.200")} position="relative">
       <HStack
         w="full"
         justifyContent="space-between"
         alignItems="center"
-        bg="gray.600"
+        bg={useColorModeValue("gray.600", "gray.400")}
         pt={12}
         py={2}
         px={6}
       >
         <Logo />
         <IconButton
-          icon={<SignOut size={26} color={colors.gray[300]} />}
+          onPress={toggleColorMode}
+          icon={
+            colorMode !== 'light' ?
+              <Moon size={26} color={colors.gray[300]} />
+              :
+              <SunDim size={26} color={colors.gray[300]} />
+          }
         />
       </HStack>
       <VStack flex={1} px={6}>
         <HStack w="full" mt={8} mb={4} justifyContent="space-between" alignItems="center">
-          <Heading color="gray.100">Minhas Tarefas</Heading>
-          <Text color="gray.200">
-            {orders.length}
-          </Text>
+          <Heading color={switchColorTextHeader}>Minhas Tarefas</Heading>
+          <PopoverLengthTasks
+            lengthListTasksSelected={isTasksFinishedSelected ? tasksFinisheds.length : tasksInProgress.length}
+            isTasksFinishedSelected={isTasksFinishedSelected}
+            colorText={switchColorTextHeader}
+          />
         </HStack>
 
         <HStack space={3} mb={8}>
           <Filter
             type="open"
             title="em andamento"
-            onPress={() => setStatusSelected('open')}
-            isActive={statusSelected === 'open'}
+            onPress={() => setIsTasksFinishedSelected(false)}
+            isActive={!isTasksFinishedSelected}
           />
 
           <Filter
             type="closed"
-            title="finalizados"
-            onPress={() => setStatusSelected('closed')}
-            isActive={statusSelected === 'closed'}
+            title="finalizadas"
+            onPress={() => setIsTasksFinishedSelected(true)}
+            isActive={isTasksFinishedSelected}
           />
         </HStack>
 
         <FlatList
-          data={orders.filter((item) => item.status === statusSelected)}
+          data={isTasksFinishedSelected ? tasksFinisheds : tasksInProgress}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDetails(item.id)} />}
+          renderItem={({ item }) => <Task data={item} onPress={() => handleOpenDetails(item.id)} />}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={() => (
@@ -81,7 +102,7 @@ export function Home() {
               <ChatTeardropText color={colors.gray[300]} size={40} />
               <Text color="gray.300" fontSize="xl" mt={4} textAlign="center">
                 Você ainda não possui {'\n'}
-                tarefas {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
+                tarefas {isTasksFinishedSelected ? 'finalizadas' : 'em andamento'}
               </Text>
             </Center>
           )}
