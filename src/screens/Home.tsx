@@ -1,13 +1,14 @@
 import { useState } from 'react';
-
-import { Center, Circle, FlatList, Heading, HStack, IconButton, Popover, Text, useColorMode, useColorModeValue, useTheme, VStack } from "native-base";
+import { Center, FlatList, Heading, HStack, IconButton, Text, useColorMode, useColorModeValue, useTheme, VStack } from "native-base";
 import { useNavigation } from '@react-navigation/native';
 import { ChatTeardropText, Moon, Plus, SunDim } from "phosphor-react-native";
 
 import { Filter } from "../components/Filter";
-import { Task, TaskProps } from '../components/Task';
-import Logo from "../assets/logo_secondary.svg";
+import { Task as TaskComponent}  from '../components/Task';
 import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
+import { Task as TaskEntity } from '../entities/task';
+
+import Logo from "../assets/logo_secondary.svg";
 
 export function Home() {
   const navigation = useNavigation();
@@ -17,25 +18,27 @@ export function Home() {
 
   const [isTasksFinishedSelected, setIsTasksFinishedSelected] = useState(false);
 
-  const [tasks, setTasks] = useState<TaskProps[]>([
+  const [tasks, setTasks] = useState<TaskEntity[]>([
     {
       id: '456',
       title: 'Task 123456766767',
-      when: '18/07/2022 às 14:00',
-      finished: false
+      date: new Date('2022-12-23T09:30:44.244Z'),
+      finished: false,
+      description: "",
     },
     {
       id: '454356',
       title: 'Task finalizada',
-      when: '18/07/2022 às 14:00',
-      finished: true
+      date: new Date('2022-12-23T09:30:44.244Z'),
+      finished: true,
+      description: "",
     }
   ]);
 
   let tasksFinisheds = tasks.filter(task => task.finished);
   let tasksInProgress = tasks.filter(task => !task.finished);
 
-  function handleNewOrder() {
+  function handleNewTask() {
     navigation.navigate('new');
   }
 
@@ -94,7 +97,7 @@ export function Home() {
         <FlatList
           data={isTasksFinishedSelected ? tasksFinisheds : tasksInProgress}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <Task data={item} onPress={() => handleOpenDetails(item.id)} />}
+          renderItem={({ item }) => <TaskComponent data={item} onPress={() => handleOpenDetails(item.id)} />}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={() => (
@@ -118,8 +121,8 @@ export function Home() {
         bg="green.300"
         variant="ghost"
         width={"16"}
-        icon={<Plus color={colors.white} size={40} />}
-        onPress={() => handleNewOrder()}
+        icon={<Plus color={colors.white} size={42} />}
+        onPress={() => handleNewTask()}
       />
     </VStack>
   )

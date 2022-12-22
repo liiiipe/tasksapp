@@ -12,9 +12,9 @@ export class InMemoryDatabaseTaskRepository implements TaskRepository {
     this.tasks.push(task);
     console.log(this.tasks);
     
-    return await new Promise((resolve, reject) => {
-      reject({})
-    })
+    // return await new Promise((resolve, reject) => {
+    //   reject({})
+    // })
   }
 
   remove() {

@@ -1,22 +1,17 @@
 import { Box, Circle, HStack, Text, useTheme, VStack, Pressable, IPressableProps, useColorModeValue } from 'native-base';
 import { ClockAfternoon, Hourglass, CircleWavyCheck } from 'phosphor-react-native';
+import { Task as TaskEntity } from '../entities/task';
 
-export type TaskProps = {
-  id: string;
-  title: string;
-  when: string;
-  finished: boolean;
+type TaskProps = IPressableProps & {
+  data: TaskEntity;
 }
 
-type Props = IPressableProps & {
-  data: TaskProps;
-}
-
-export function Task({ data, ...rest }: Props) {
+export function Task({ data, ...rest }: TaskProps) {
   const { colors } = useTheme();
 
   const statusColor = data.finished ? colors.green[300] : colors.secondary[700];
-
+  const dateFormat = `${data.date.toLocaleDateString()} às ${data.date.toLocaleTimeString().substring(0, 5)}`;
+  
   return (
     <Pressable
       borderWidth={1}
@@ -42,7 +37,7 @@ export function Task({ data, ...rest }: Props) {
           <HStack alignItems="center">
             <ClockAfternoon size={15} color={colors.gray[300]} />
             <Text color="gray.200" fontSize="xs" ml={1}>
-              {data.when}
+              {dateFormat}
             </Text>
           </HStack>
         </VStack>
