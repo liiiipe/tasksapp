@@ -1,4 +1,5 @@
 import { Text, Button, IButtonProps, useTheme, useColorModeValue } from 'native-base';
+import { color } from 'native-base/lib/typescript/theme/styled-system';
 
 type Props = IButtonProps & {
   title: string;
@@ -15,16 +16,16 @@ export function Filter({ title, isActive = false, type, ...rest }: Props) {
     <Button
       variant="outline"
       borderWidth={1}
-      borderColor={useColorModeValue(isActive ? colorType : "gray.600", isActive ? "white" : "gray.300")}
-      bgColor={useColorModeValue("gray.600", isActive ? colorType : "gray.300")}
+      borderColor={useColorModeValue(isActive ? colors.white : colors.gray[300], isActive ? colorType : colors.gray[600])}
+      bgColor={useColorModeValue(isActive ? colorType : colors.gray[300], colors.gray[600])}
       flex={1}
       size="sm"
-      _pressed={{ bg: colorType, borderColor: useColorModeValue(colorType, "white") }}
+      _pressed={{ bg: colorType, borderColor: useColorModeValue(colors.white, colorType) }}
       disabled={isActive}
       {...rest}
     >
       <Text 
-      color={useColorModeValue(isActive ? colorType : "gray.300", "white")} 
+      color={useColorModeValue(colors.white, isActive ? colorType : colors.gray[300])} 
       fontSize="xs" 
       textTransform="uppercase"
       >
