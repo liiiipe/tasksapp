@@ -17,7 +17,12 @@ export class InMemoryDatabaseTaskRepository implements TaskRepository {
     // })
   }
 
-  remove() {
+  async remove(id: string) {
+    this.tasks = this.tasks.filter(task => task.id !== id);
+    console.log(this.tasks);
 
+    // return await new Promise((resolve, reject) => {
+    //   reject({})
+    // })
   }
 }

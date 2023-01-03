@@ -1,18 +1,28 @@
 import { useState } from 'react';
-import { Center, FlatList, Heading, HStack, IconButton, Text, useColorMode, useColorModeValue, useTheme, VStack } from "native-base";
+import { Center, FlatList, Heading, HStack, IconButton, Text, useColorModeValue, useTheme, useToast, VStack } from "native-base";
 import { useNavigation } from '@react-navigation/native';
-import { ChatTeardropText, Moon, Plus, SunDim } from "phosphor-react-native";
+import { ChatTeardropText, Plus } from "phosphor-react-native";
 
 import { Filter } from "../components/Filter";
-import { Task as TaskComponent}  from '../components/Task';
+import { Task as TaskComponent } from '../components/Task';
 import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
-import { Task as TaskEntity } from '../entities/task';
 import { HeaderHome } from '../components/HeaderHome';
 
-export function Home() {
+import { removeTask, Task as TaskEntity } from '../entities/task';
+import { TaskRepository } from '../repositories/task-repository';
+import { AlertError } from '../components/AlertError';
+
+interface HomeProps {
+  taskRepository: TaskRepository;
+}
+
+export function Home({ taskRepository }: HomeProps) {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const switchColorTextHeader = useColorModeValue("gray.600", "gray.100");
+  const toast = useToast();
+
+  const [showError, setShowError] = useState(false);
 
   const [isTasksFinishedSelected, setIsTasksFinishedSelected] = useState(false);
 
@@ -43,6 +53,26 @@ export function Home() {
   function handleOpenDetails(orderId: string) {
     navigation.navigate('details', { orderId });
   }
+
+  const onClickDeleteTask = async (id: string) => {
+    await removeTask(id, taskRepository)
+      .then(() => executeAfterRemoveTask(id))
+      .catch(errorOnRemoveTask);
+  }
+
+  const executeAfterRemoveTask = (id: string) => {
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+
+    toast.show({
+      title: "Tarefa excluída com sucesso!"
+    });
+  };
+
+  const errorOnRemoveTask = (error) => {
+    console.log("errorOnRemoveTask: ", error);
+    setShowError(true);
+  };
 
   return (
     <VStack flex={1} pb={6} bg={useColorModeValue("gray.200", "gray.700")} position="relative">
@@ -76,7 +106,15 @@ export function Home() {
         <FlatList
           data={isTasksFinishedSelected ? tasksFinisheds : tasksInProgress}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <TaskComponent data={item} onPress={() => handleOpenDetails(item.id)} />}
+          renderItem={
+            ({ item }) => (
+              <TaskComponent
+                data={item}
+                onPress={() => handleOpenDetails(item.id)}
+                onPressDelete={onClickDeleteTask}
+              />
+            )
+          }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={() => (
@@ -103,6 +141,8 @@ export function Home() {
         icon={<Plus color={colors.white} size={42} />}
         onPress={() => handleNewTask()}
       />
+
+      <AlertError show={showError} setShow={setShowError} />
     </VStack>
   )
 }

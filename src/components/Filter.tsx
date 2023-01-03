@@ -1,5 +1,4 @@
 import { Text, Button, IButtonProps, useTheme, useColorModeValue } from 'native-base';
-import { color } from 'native-base/lib/typescript/theme/styled-system';
 
 type Props = IButtonProps & {
   title: string;

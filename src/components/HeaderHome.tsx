@@ -7,6 +7,8 @@ export function HeaderHome() {
   const { colors } = useTheme();
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const IconColorMode = colorMode === "light" ? Moon : SunDim;
+
   return (
     <HStack
       w="full"
@@ -20,12 +22,7 @@ export function HeaderHome() {
       <Logo />
       <IconButton
         onPress={toggleColorMode}
-        icon={
-          colorMode === 'light' ?
-            <Moon size={26} color={colors.gray[300]} />
-            :
-            <SunDim size={26} color={colors.gray[300]} />
-        }
+        icon={<IconColorMode size={26} color={colors.gray[300]} />}
       />
     </HStack>
   )

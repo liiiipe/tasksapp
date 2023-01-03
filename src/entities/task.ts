@@ -11,3 +11,9 @@ export type Task = {
 export const createTask = async (task: Task, taskRepository: TaskRepository): Promise<any> => {
   await taskRepository.create(task);
 }
+
+export const removeTask = async (id: string, taskRepository: TaskRepository): Promise<any> => {
+  // verificar se a task existe
+
+  await taskRepository.remove(id);
+}

@@ -11,7 +11,7 @@ export function AppRoutes() {
   return (
     <Navigator screenOptions={{ headerShown: false }} initialRouteName="home">
       <Screen name="home">
-        {props => <Home /> }
+        {props => <Home {...props} taskRepository={new InMemoryDatabaseTaskRepository()} /> }
       </Screen>
       <Screen name="new">
         {props => <NewTask {...props} taskRepository={new InMemoryDatabaseTaskRepository()} /> }

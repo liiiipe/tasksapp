@@ -2,5 +2,5 @@ import { Task } from "../entities/task";
 
 export interface TaskRepository {
   create: (task: Task) => Promise<any>;
-  remove: () => void;
+  remove: (id: string) => Promise<any>;
 }
