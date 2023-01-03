@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Center, FlatList, Heading, HStack, IconButton, Text, useColorModeValue, useTheme, useToast, VStack } from "native-base";
+import { Center, FlatList, Heading, HStack, IconButton, Text, useColorModeValue, useTheme, useToast, VStack, Fab } from "native-base";
 import { useNavigation } from '@react-navigation/native';
 import { ChatTeardropText, Plus } from "phosphor-react-native";
 
@@ -130,15 +130,11 @@ export function Home({ taskRepository }: HomeProps) {
 
       </VStack>
 
-      <IconButton
-        position="absolute"
-        bottom={6}
-        right={6}
-        borderRadius="full"
+      <Fab
+        renderInPortal={false}
+        shadow={2}
+        icon={<Plus color={colors.white} size={30} />}
         bg="green.300"
-        variant="ghost"
-        width={"16"}
-        icon={<Plus color={colors.white} size={42} />}
         onPress={() => handleNewTask()}
       />
 
