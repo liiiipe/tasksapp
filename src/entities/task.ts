@@ -17,3 +17,9 @@ export const removeTask = async (id: string, taskRepository: TaskRepository): Pr
 
   await taskRepository.remove(id);
 }
+
+export const getAllTasks = async (taskRepository: TaskRepository): Promise<any> => {
+  // verificar se a task existe
+
+  return await taskRepository.getAll();
+}

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Center, FlatList, Heading, HStack, IconButton, Text, useColorModeValue, useTheme, useToast, VStack, Fab } from "native-base";
-import { useNavigation } from '@react-navigation/native';
+import { useCallback, useEffect, useState } from 'react';
+import { Center, FlatList, Heading, HStack, Text, useColorModeValue, useTheme, useToast, VStack, Fab } from "native-base";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ChatTeardropText, Plus } from "phosphor-react-native";
 
 import { Filter } from "../components/Filter";
@@ -8,7 +8,7 @@ import { Task as TaskComponent } from '../components/Task';
 import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
 import { HeaderHome } from '../components/HeaderHome';
 
-import { removeTask, Task as TaskEntity } from '../entities/task';
+import { getAllTasks, removeTask, Task as TaskEntity } from '../entities/task';
 import { TaskRepository } from '../repositories/task-repository';
 import { AlertError } from '../components/AlertError';
 
@@ -26,22 +26,7 @@ export function Home({ taskRepository }: HomeProps) {
 
   const [isTasksFinishedSelected, setIsTasksFinishedSelected] = useState(false);
 
-  const [tasks, setTasks] = useState<TaskEntity[]>([
-    {
-      id: '456',
-      title: 'Task 123456766767',
-      date: new Date('2022-12-23T09:30:44.244Z'),
-      finished: false,
-      description: "",
-    },
-    {
-      id: '454356',
-      title: 'Task finalizada',
-      date: new Date('2022-12-23T09:30:44.244Z'),
-      finished: true,
-      description: "",
-    }
-  ]);
+  const [tasks, setTasks] = useState<TaskEntity[]>([]);
 
   const tasksFinisheds = tasks.filter(task => task.finished);
   const tasksInProgress = tasks.filter(task => !task.finished);
@@ -74,8 +59,31 @@ export function Home({ taskRepository }: HomeProps) {
     setShowError(true);
   };
 
+  useFocusEffect(useCallback(() => {
+    let isActive = true;
+
+    const fetchTasks = async () => {
+      try {
+        const tasks = await getAllTasks(taskRepository);
+
+        if (isActive) {
+          setTasks(tasks);
+        }
+      } catch (error) {
+        console.log("errorGetAllTasks: ", error);
+        setShowError(true);
+      }
+    };
+
+    fetchTasks();
+
+    return () => {
+      isActive = false;
+    };
+  }, [tasks]));
+
   return (
-    <VStack flex={1} pb={6} bg={useColorModeValue("gray.200", "gray.700")} position="relative">
+    <VStack flex={1} pb={6} bg={useColorModeValue("gray.200", "gray.700")}>
       <HeaderHome />
       <VStack flex={1} px={6}>
         <HStack w="full" mt={8} mb={4} justifyContent="space-between" alignItems="center">

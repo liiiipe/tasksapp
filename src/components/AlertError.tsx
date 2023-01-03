@@ -15,7 +15,8 @@ export function AlertError({ show, setShow }: AlertErrorProps) {
       alignItems="center"
       position="absolute"
       bottom="7"
-      right="5"
+      zIndex={100}
+      marginX="16"
     >
       <Alert status="error">
         <VStack>
