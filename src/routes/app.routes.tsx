@@ -3,7 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Home } from '../screens/Home';
 import { Details } from '../screens/Details';
 import { NewTask } from '../screens/NewTask';
-import { InMemoryDatabaseTaskRepository } from '../repositories/in-memory-database-task-repository';
+import { InMemoryDatabaseTaskRepository } from '../database/repositories/in-memory-database-task-repository';
+//import { RealmTaskRepository } from '../database/repositories/realm-task-repository';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 

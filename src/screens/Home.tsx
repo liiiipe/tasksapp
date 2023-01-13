@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Center, FlatList, Heading, HStack, Text, useColorModeValue, useTheme, useToast, VStack, Fab } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ChatTeardropText, Plus } from "phosphor-react-native";
@@ -9,7 +9,7 @@ import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
 import { HeaderHome } from '../components/HeaderHome';
 
 import { getAllTasks, removeTask, Task as TaskEntity } from '../entities/task';
-import { TaskRepository } from '../repositories/task-repository';
+import { TaskRepository } from '../database/repositories/task-repository';
 import { AlertError } from '../components/AlertError';
 
 interface HomeProps {
@@ -46,7 +46,7 @@ export function Home({ taskRepository }: HomeProps) {
   }
 
   const executeAfterRemoveTask = (id: string) => {
-    const updatedTasks = tasks.filter(task => task.id !== id);
+    const updatedTasks = tasks.filter(task => task._id !== id);
     setTasks(updatedTasks);
 
     toast.show({
@@ -113,12 +113,12 @@ export function Home({ taskRepository }: HomeProps) {
 
         <FlatList
           data={isTasksFinishedSelected ? tasksFinisheds : tasksInProgress}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           renderItem={
             ({ item }) => (
               <TaskComponent
                 data={item}
-                onPress={() => handleOpenDetails(item.id)}
+                onPress={() => handleOpenDetails(item._id)}
                 onPressDelete={onClickDeleteTask}
               />
             )

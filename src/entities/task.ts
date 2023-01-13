@@ -1,11 +1,12 @@
-import { TaskRepository } from "../repositories/task-repository";
+import { TaskRepository } from "../database/repositories/task-repository";
 
 export type Task = {
-  id: string;
+  _id?: string;
   title: string;
   description: string;
   date: Date;
   finished: boolean;
+  created_at?: Date;
 }
 
 export const createTask = async (task: Task, taskRepository: TaskRepository): Promise<any> => {

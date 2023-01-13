@@ -3,7 +3,7 @@ import { HStack, Text, VStack, Switch, useTheme, Pressable, FormControl, Warning
 import { useNavigation } from '@react-navigation/native';
 
 import { createTask, Task } from '../entities/task';
-import { TaskRepository } from '../repositories/task-repository';
+import { TaskRepository } from '../database/repositories/task-repository';
 import { Header } from '../components/Header';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
@@ -23,7 +23,6 @@ export function NewTask({ taskRepository }: NewTaskProps) {
 
   const [isInvalid, setIsInvalid] = useState(false);
   const [task, setTask] = useState<Task>({
-    id: "",
     title: "",
     description: "",
     date: new Date(),
