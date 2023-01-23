@@ -8,7 +8,7 @@ import { Task as TaskComponent } from '../components/Task';
 import { PopoverLengthTasks } from '../components/PopoverLengthTasks';
 import { HeaderHome } from '../components/HeaderHome';
 
-import { getAllTasks, removeTask, Task as TaskEntity } from '../entities/task';
+import { attFinishedTask, getAllTasks, removeTask, Task as TaskEntity } from '../entities/task';
 import { TaskRepository } from '../database/repositories/task-repository';
 import { AlertError } from '../components/AlertError';
 
@@ -35,9 +35,25 @@ export function Home({ taskRepository }: HomeProps) {
     navigation.navigate('new');
   }
 
-  function handleOpenDetails(orderId: string) {
-    navigation.navigate('details', { orderId });
+  const onPressFinishTask = async (id: string, isFinished: boolean) => {
+    await attFinishedTask(id, isFinished, taskRepository)
+      .then(() => executeAfterFinishTask(id, isFinished))
+      .catch(errorOnFinishTask);
   }
+
+  const executeAfterFinishTask = (id: string, isFinished: boolean) => {
+    const updatedTasks = tasks.map(task => task._id !== id ? task : ({...task, finished: isFinished}))
+    setTasks(updatedTasks);
+
+    toast.show({
+      title: "Andamento da tarefa alterado com sucesso!"
+    });
+  };
+
+  const errorOnFinishTask = (error) => {
+    console.log("errorOnFinishTask: ", error);
+    setShowError(true);
+  };
 
   const onClickDeleteTask = async (id: string) => {
     await removeTask(id, taskRepository)
@@ -118,8 +134,8 @@ export function Home({ taskRepository }: HomeProps) {
             ({ item }) => (
               <TaskComponent
                 data={item}
-                onPress={() => handleOpenDetails(item._id)}
                 onPressDelete={onClickDeleteTask}
+                onPressFinishTask={onPressFinishTask}
               />
             )
           }

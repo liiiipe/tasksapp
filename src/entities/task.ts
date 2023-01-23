@@ -24,3 +24,7 @@ export const getAllTasks = async (taskRepository: TaskRepository): Promise<any> 
 
   return await taskRepository.getAll();
 }
+
+export const attFinishedTask = async (id: string, isFinished: boolean, taskRepository: TaskRepository): Promise<any> => {
+  return await taskRepository.attFinished(id, isFinished);
+}

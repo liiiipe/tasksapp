@@ -43,4 +43,16 @@ export class RealmTaskRepository implements TaskRepository {
     console.log("Tasks obtidas com sucesso: ", tasks);
     return tasks;
   }
+
+  async attFinished (id: string, isFinished: boolean) {
+    const realm = await getRealm();
+    
+    realm.write(() => {
+      let task = realm.objects("Task").filtered(`_id = '${id}'`)[0];
+      // @ts-ignore
+      task.finished = isFinished;
+    });
+
+    realm.close();
+  }
 }

@@ -11,6 +11,7 @@ import { AlertError } from '../components/AlertError';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { ButtonDatePicker } from '../components/ButtonDatePicker';
 import { MenuDateSuggestion } from '../components/MenuDateSuggestion';
+import { Toggle } from '../components/Toggle';
 
 interface NewTaskProps {
   taskRepository: TaskRepository;
@@ -84,7 +85,7 @@ export function NewTask({ taskRepository }: NewTaskProps) {
 
   const updatingDateBasedOnSuggestion = (suggestion: Date) => {
     console.log(suggestion);
-    
+
   }
 
   return (
@@ -108,8 +109,8 @@ export function NewTask({ taskRepository }: NewTaskProps) {
         </HStack>
 
         <HStack justifyContent="space-between">
-          <MenuDateSuggestion title="Sugestão de Data" type="date" onPressMenuItem={updatingDateBasedOnSuggestion}/>
-          <MenuDateSuggestion title="Sugestão de Horário" type="time" onPressMenuItem={updatingDateBasedOnSuggestion}/>
+          <MenuDateSuggestion title="Sugestão de Data" type="date" onPressMenuItem={updatingDateBasedOnSuggestion} />
+          <MenuDateSuggestion title="Sugestão de Horário" type="time" onPressMenuItem={updatingDateBasedOnSuggestion} />
         </HStack>
 
         <Input
@@ -121,32 +122,11 @@ export function NewTask({ taskRepository }: NewTaskProps) {
           onChangeText={(value) => setTask({ ...task, description: value })}
         />
 
-        <HStack alignItems="center" space={4}>
-          <Pressable
-            onPress={() => handleToggleFinished(false)}
-            _pressed={{
-              opacity: 0.3
-            }}
-          >
-            <Text color={colors.secondary[700]}>Em andamento</Text>
-          </Pressable>
-          <Switch
-            size="lg"
-            onTrackColor={colors.primary[700]}
-            offTrackColor={colors.secondary[700]}
-            onToggle={() => handleToggleFinished()}
-            isChecked={task.finished}
-          />
-          <Pressable
-            onPress={() => handleToggleFinished(true)}
-            _pressed={{
-              opacity: 0.3
-            }}
-          >
-            <Text color={colors.primary[700]}>Finalizada</Text>
-          </Pressable>
+        <Toggle
+          handleToggleFinished={handleToggleFinished}
+          switchValue={task.finished}
+        />
 
-        </HStack>
         <Button
           title="Cadastrar"
           mt={1}

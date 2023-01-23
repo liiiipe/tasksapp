@@ -56,4 +56,13 @@ export class InMemoryDatabaseTaskRepository implements TaskRepository {
     //   reject({})
     // })
   };
+
+  async attFinished (id: string, isFinished: boolean) {
+    this.tasks = this.tasks.map(task => task._id !== id ? task : ({...task, finished: isFinished}));
+    console.log(this.tasks);
+    
+    // return await new Promise((resolve, reject) => {
+    //   reject({})
+    // })
+  };
 }
