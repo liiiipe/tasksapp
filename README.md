@@ -1,4 +1,4 @@
-Taskapps é um app para gerenciamento de tarefas.
+# Taskapps é um app para gerenciamento de tarefas.
 
 Feito utilizando React Native com (Expo)[https://docs.expo.dev/], (NativeBase)[https://nativebase.io/] e (RealmDB)[https://realm.io/].
 
